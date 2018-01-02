@@ -9,7 +9,7 @@ public class TextHandler {
     public static String generateText(int len) {
         String generatedString = "";
         for (int i = 0; i < len; i++) {
-            generatedString += rand.nextInt(alphabet.length());
+            generatedString += alphabet.charAt(rand.nextInt(alphabet.length()));
         }
         return generatedString;
     }

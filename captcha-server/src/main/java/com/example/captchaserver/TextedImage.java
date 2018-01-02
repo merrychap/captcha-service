@@ -11,6 +11,9 @@ public abstract class TextedImage implements ImageGeneratorInterface {
     protected int width;
     protected int height;
 
+    protected Graphics2D graphics;
+    protected BufferedImage bufImage;
+
     public abstract void drawText(Graphics2D graphics);
 
     @Override
@@ -29,16 +32,18 @@ public abstract class TextedImage implements ImageGeneratorInterface {
         graphics.setFont(new Font("Georgia", Font.BOLD, 11));
         graphics.setRenderingHints(rh);
         graphics.setPaint(gp);
+
+        this.graphics = graphics;
     }
 
     @Override
-    public BufferedImage createImage(int width, int height) {
+    public void createImage(int width, int height) {
         BufferedImage bufImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics    = bufImage.createGraphics();
 
         initGraphics(graphics);
         drawOnImage(bufImage, graphics);
 
-        return null;
+        this.bufImage = bufImage;
     }
 }

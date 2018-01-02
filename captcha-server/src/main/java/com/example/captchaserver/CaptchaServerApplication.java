@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 
 
 @SpringBootApplication
@@ -24,10 +25,16 @@ public class CaptchaServerApplication {
 class CaptchaService {
 
     @RequestMapping(value="/", method=RequestMethod.GET)
-    public ModelAndView rootPath(Map<String, Object> model) {
+    public ModelAndView rootPath(HashMap<String, Object> model, HttpServletResponse response) {
         CaptchaHandler handler = new CaptchaHandler();
-        handler.generateCaptcha();
+        String captcha = handler.generateBase64Captcha();
         handler = null;
+
+        model.put("name", "stranger");
+        model.put("captcha", captcha);
+
+        response.setHeader("SomeHeader", "SomeValue");
+
         return new ModelAndView("index", model);
     }
 }
