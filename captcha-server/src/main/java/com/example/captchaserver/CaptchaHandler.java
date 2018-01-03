@@ -8,16 +8,51 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Random;
 
-public class CaptchaHandler extends TextedImage {
-    private int width   = 150;
-    private int height  = 50;
-    private int textLen = 6;
 
-    private String genText;
+public class CaptchaHandler extends TextedImage {
+    public static String EmptyString = "";
+
+    public String genText;
+
     private Random rand;
+
+    @Override
+    public void drawText(Graphics2D graphics) {
+        int x = 0, y = 0;
+
+        for (int i = 0; i < this.genText.length(); i++) {
+            x += 13 + Math.abs(rand.nextInt()) % 15;
+            y = 25 + Math.abs(rand.nextInt()) % 20;
+            graphics.drawChars(this.genText.toCharArray(), i, 1, x, y);
+        }
+        graphics.dispose();
+    }
+
+    @Override
+    public void drawOnImage(Graphics2D graphics) {
+        graphics.fillRect(0, 0, this.width, this.height);
+        graphics.setColor(Color.MAGENTA);
+    }
+
+    @Override
+    public void initGraphics(Graphics2D graphics) {
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        GradientPaint gp  = new GradientPaint(0, 0, new Color(234, 255, 99), 0, this.height/2, new Color(68, 255, 109), true);
+
+        rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+        graphics.setFont(new Font("Courier New", Font.BOLD, 30));
+        graphics.setRenderingHints(rh);
+        graphics.setPaint(gp);
+
+        this.graphics = graphics;
+    }
 
     public CaptchaHandler() {
         rand = new Random();
+        width   = 180;
+        height  = 80;
+        textLen = 7;
     }
 
     public String generateBase64Captcha() {
@@ -28,7 +63,7 @@ public class CaptchaHandler extends TextedImage {
         try {
             return DatatypeConverter.printBase64Binary(imageToBytes(this.bufImage));
         } catch (IOException ex) {
-            return "";
+            return EmptyString;
         }
     }
 
@@ -39,18 +74,5 @@ public class CaptchaHandler extends TextedImage {
         byte[] imageBytes = baos.toByteArray();
         baos.close();
         return imageBytes;
-    }
-
-    @Override
-    public void drawText(Graphics2D graphics) {
-        int x = 0;
-        int y = 0;
-
-        for (int i = 0; i < this.genText.length(); i++) {
-            x += 10 + Math.abs(rand.nextInt()) % 15;
-            y = 20 + Math.abs(rand.nextInt()) % 20;
-            graphics.drawChars(this.genText.toCharArray(), i, 1, x, y);
-        }
-        graphics.dispose();
     }
 }

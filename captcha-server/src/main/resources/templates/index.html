@@ -7,5 +7,12 @@
     <body>
         <p>Hello, {{ name }}!</p>
         <img src="data:image/png;base64, {{ captcha }}" />
+        <form action="/" method="post">
+            <div>Id:</div>
+            <input type="text" name="user_id"><br>
+            <div>Answer:</div>
+            <input type="text" name="captcha_ans"><br>
+            <input type="submit" value="Submit">
+        </form>
     </body>
 </html>
