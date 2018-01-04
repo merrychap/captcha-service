@@ -6,9 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.jws.WebParam;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,8 +24,17 @@ public class CaptchaServerApplication {
 @RestController
 @RequestMapping(value="/")
 class CaptchaController {
+    private long minutesDelay  = 1;
     private String errorReason = "errorReason";
-    private HashMap<String, String> userId2captcha = new HashMap<>();
+
+    private String userIdHeader        = "UserId";
+    private String captchaAnswerHeader = "CaptchaAnswer";
+
+    private String captchaAttribute = "captcha";
+    private String nameAttribute    = "name";
+
+    private HashMap<String, CaptchaTimeTuple> userId2Data = new HashMap<>();
+
 
     @RequestMapping(value="/", method=RequestMethod.GET)
     public ModelAndView captchaForm(Model model, HttpServletResponse response) {
@@ -33,14 +42,13 @@ class CaptchaController {
         String userId = TextHandler.generateId();
         String captcha = handler.generateBase64Captcha();
 
-        userId2captcha.put(userId, handler.genText);
+        userId2Data.put(userId, new CaptchaTimeTuple(handler.genText, LocalDateTime.now()));
 
-        model.addAttribute("name", "stranger");
-        model.addAttribute("captcha", captcha);
+        model.addAttribute(nameAttribute, "stranger");
+        model.addAttribute(captchaAttribute, captcha);
 
-        response.setHeader("UserId", userId);
-        response.setHeader("CaptchaAnswer", handler.genText);
-        response.setHeader("TimeExpires", "Someday");
+        response.setHeader(userIdHeader, userId);
+        response.setHeader(captchaAnswerHeader, handler.genText);
 
         return new ModelAndView("index", (Map<String, ?>) model);
     }
@@ -49,14 +57,42 @@ class CaptchaController {
     public ModelAndView captchaSubmit(@ModelAttribute("user_id") String userId,
                                       @ModelAttribute("captcha_ans") String captchaAns,
                                       Model model) {
-        if (!userId2captcha.containsKey(userId)) {
-            model.addAttribute(errorReason, "There is no such id");
-            return new ModelAndView("error", (Map<String, ?>) model);
+        if (!userId2Data.containsKey(userId))
+            return generateError(model, "There is no such id");
+
+        CaptchaTimeTuple expectedData = userId2Data.get(userId);
+        if (!expectedData.captcha.equals(captchaAns))
+            return generateError(model, "CAPTCHA is not correct");
+        else {
+            return processValidPost(expectedData, model, userId);
         }
-        String expectedCaptcha = userId2captcha.get(userId);
-        if (!expectedCaptcha.equals(captchaAns)) {
-            model.addAttribute(errorReason, "CAPTCHA is not correct");
-            return new ModelAndView("error", (Map<String, ?>) model);
-        } else return new ModelAndView("correct");
+    }
+
+    private ModelAndView processValidPost(CaptchaTimeTuple expectedData, Model model, String userId) {
+        if (getDateDiffInMinutes(expectedData.time) >= minutesDelay)
+            return generateError(model, "Time for answer is exceeded");
+        userId2Data.remove(userId);
+        return new ModelAndView("correct");
+    }
+
+    private ModelAndView generateError(Model model, String errorString) {
+        model.addAttribute(errorReason, errorString);
+        return new ModelAndView("error", (Map<String, ?>) model);
+    }
+
+    private long getDateDiffInMinutes(LocalDateTime localTime) {
+        LocalDateTime nowTime = LocalDateTime.now();
+        Duration duration = Duration.between(nowTime, localTime);
+        return Math.abs(duration.toMinutes());
+    }
+}
+
+class CaptchaTimeTuple {
+    public String captcha;
+    public LocalDateTime time;
+
+    public CaptchaTimeTuple(String captcha, LocalDateTime time) {
+        this.captcha = captcha;
+        this.time    = time;
     }
 }

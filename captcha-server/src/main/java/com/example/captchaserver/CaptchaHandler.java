@@ -16,6 +16,25 @@ public class CaptchaHandler extends TextedImage {
 
     private Random rand;
 
+    public CaptchaHandler() {
+        rand = new Random();
+        width   = 180;
+        height  = 80;
+        textLen = 7;
+    }
+
+    public String generateBase64Captcha() {
+        this.genText = TextHandler.generateText(this.textLen);
+        createImage(width, height);
+        drawText(this.graphics);
+
+        try {
+            return DatatypeConverter.printBase64Binary(imageToBytes(this.bufImage));
+        } catch (IOException ex) {
+            return EmptyString;
+        }
+    }
+
     @Override
     public void drawText(Graphics2D graphics) {
         int x = 0, y = 0;
@@ -46,25 +65,6 @@ public class CaptchaHandler extends TextedImage {
         graphics.setPaint(gp);
 
         this.graphics = graphics;
-    }
-
-    public CaptchaHandler() {
-        rand = new Random();
-        width   = 180;
-        height  = 80;
-        textLen = 7;
-    }
-
-    public String generateBase64Captcha() {
-        this.genText = TextHandler.generateText(this.textLen);
-        createImage(width, height);
-        drawText(this.graphics);
-
-        try {
-            return DatatypeConverter.printBase64Binary(imageToBytes(this.bufImage));
-        } catch (IOException ex) {
-            return EmptyString;
-        }
     }
 
     private byte[] imageToBytes(BufferedImage bufImage) throws IOException {
