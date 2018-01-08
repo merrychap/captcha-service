@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 
@@ -15,20 +16,24 @@ public class CaptchaHandler extends TextedImage {
     public String genText;
 
     private Random rand;
+    private List<ImageFilterInterface> filters;
 
-    public CaptchaHandler() {
+    public CaptchaHandler(List<ImageFilterInterface> filters) {
         rand = new Random();
         width   = 180;
         height  = 80;
         textLen = 7;
+        this.filters = filters;
     }
 
     public String generateBase64Captcha() {
-        this.genText = TextHandler.generateText(this.textLen);
-        createImage(width, height);
-        drawText(this.graphics);
-
         try {
+            this.genText = TextHandler.generateText(this.textLen);
+            createImage(width, height);
+            drawText(this.graphics);
+
+            applyFilters(this.bufImage);
+
             return DatatypeConverter.printBase64Binary(imageToBytes(this.bufImage));
         } catch (IOException ex) {
             return EmptyString;
@@ -74,5 +79,11 @@ public class CaptchaHandler extends TextedImage {
         byte[] imageBytes = baos.toByteArray();
         baos.close();
         return imageBytes;
+    }
+
+    private void applyFilters(BufferedImage bufImage) {
+        for (ImageFilterInterface filter : this.filters) {
+            filter.applyFilter(bufImage);
+        }
     }
 }

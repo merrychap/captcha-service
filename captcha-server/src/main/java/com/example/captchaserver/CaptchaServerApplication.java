@@ -38,17 +38,16 @@ class CaptchaController {
 
     @RequestMapping(value="/", method=RequestMethod.GET)
     public ModelAndView captchaForm(Model model, HttpServletResponse response) {
-        CaptchaHandler handler = new CaptchaHandler();
-        String userId = TextHandler.generateId();
-        String captcha = handler.generateBase64Captcha();
+        CaptchaGenResult captcha = (CaptchaGenResult) RequestProcessor.generate(ImageType.CAPTCHA);
+        String userId  = TextHandler.generateId();
 
-        userId2Data.put(userId, new CaptchaTimeTuple(handler.genText, LocalDateTime.now()));
+        userId2Data.put(userId, new CaptchaTimeTuple(captcha.generatedText, LocalDateTime.now()));
 
         model.addAttribute(nameAttribute, "stranger");
-        model.addAttribute(captchaAttribute, captcha);
+        model.addAttribute(captchaAttribute, captcha.base64image);
 
         response.setHeader(userIdHeader, userId);
-        response.setHeader(captchaAnswerHeader, handler.genText);
+        response.setHeader(captchaAnswerHeader, captcha.generatedText);
 
         return new ModelAndView("index", (Map<String, ?>) model);
     }
