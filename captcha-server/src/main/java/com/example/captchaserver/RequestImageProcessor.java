@@ -1,9 +1,8 @@
 package com.example.captchaserver;
 
 import java.util.Arrays;
-import java.util.List;
 
-public class RequestProcessor {
+public class RequestImageProcessor {
     private static NoiseFilter noiseFilter = new NoiseFilter();
 
     public static Object generate(ImageType type) {
@@ -13,10 +12,10 @@ public class RequestProcessor {
     }
 
     private static CaptchaGenResult generateCaptcha() {
-        CaptchaHandler captchaHandler = new CaptchaHandler(Arrays.asList(noiseFilter));
+        CaptchaImageHandler captchaImageHandler = new CaptchaImageHandler(Arrays.asList(noiseFilter));
 
-        String base64image = captchaHandler.generateBase64Captcha();
-        String genText     = captchaHandler.genText;
+        String base64image = captchaImageHandler.generateBase64Captcha();
+        String genText     = captchaImageHandler.genText;
 
         return new CaptchaGenResult(genText, base64image);
     }

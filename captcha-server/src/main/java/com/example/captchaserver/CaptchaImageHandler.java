@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 
-public class CaptchaHandler extends TextedImage {
+public class CaptchaImageHandler extends TextedImage {
     public static String EmptyString = "";
 
     public String genText;
@@ -18,7 +18,7 @@ public class CaptchaHandler extends TextedImage {
     private Random rand;
     private List<ImageFilterInterface> filters;
 
-    public CaptchaHandler(List<ImageFilterInterface> filters) {
+    public CaptchaImageHandler(List<ImageFilterInterface> filters) {
         rand = new Random();
         width   = 180;
         height  = 80;
