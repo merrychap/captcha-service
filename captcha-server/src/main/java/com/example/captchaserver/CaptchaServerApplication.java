@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
 
 
 @SpringBootApplication
@@ -25,7 +27,12 @@ class CaptchaController {
 
     @RequestMapping(value="/", method=RequestMethod.GET)
     public ModelAndView captchaForm(Model model, HttpServletResponse response) {
-        return cProcessor.processGetRequest(model, response);
+        try {
+            return cProcessor.processGetRequest(model, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("index", (Map<String, ?>) model);
     }
 
     @RequestMapping(value="/", method=RequestMethod.POST)

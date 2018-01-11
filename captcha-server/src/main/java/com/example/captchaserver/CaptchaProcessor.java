@@ -4,6 +4,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class CaptchaProcessor implements RequestProcessorInterface {
     }
 
     @Override
-    public ModelAndView processGetRequest(Model model, HttpServletResponse response) {
+    public ModelAndView processGetRequest(Model model, HttpServletResponse response) throws IOException {
         CaptchaGenResult captcha = (CaptchaGenResult) RequestImageProcessor.generate(ImageType.CAPTCHA);
         String userId  = TextHandler.generateId();
 
