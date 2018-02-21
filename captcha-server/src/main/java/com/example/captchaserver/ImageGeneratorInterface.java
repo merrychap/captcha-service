@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public interface ImageGeneratorInterface {
-    void drawOnImage(Graphics2D g);
-    void initGraphics(Graphics2D graphics);
-    void createImage(int width, int height);
+    void drawImage(Graphics2D g);
+    Graphics2D initGraphics(Graphics2D graphics);
+    BufferedImage createImage(int width, int height);
 }

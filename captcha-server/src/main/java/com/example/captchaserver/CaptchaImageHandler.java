@@ -29,8 +29,7 @@ public class CaptchaImageHandler extends TextedImage {
     public String generateBase64Captcha() {
         try {
             this.genText = TextHandler.generateText(this.textLen);
-            createImage(width, height);
-            drawText(this.graphics);
+            this.bufImage = createImage(width, height);
 
             applyFilters(this.bufImage);
 
@@ -53,13 +52,15 @@ public class CaptchaImageHandler extends TextedImage {
     }
 
     @Override
-    public void drawOnImage(Graphics2D graphics) {
+    public void drawImage(Graphics2D graphics) {
         graphics.fillRect(0, 0, this.width, this.height);
         graphics.setColor(Color.MAGENTA);
+
+        drawText(graphics);
     }
 
     @Override
-    public void initGraphics(Graphics2D graphics) {
+    public Graphics2D initGraphics(Graphics2D graphics) {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         GradientPaint gp  = new GradientPaint(0, 0, new Color(234, 255, 99), 0, this.height/2, new Color(68, 255, 109), true);
 
@@ -69,7 +70,7 @@ public class CaptchaImageHandler extends TextedImage {
         graphics.setRenderingHints(rh);
         graphics.setPaint(gp);
 
-        this.graphics = graphics;
+        return graphics;
     }
 
     private byte[] imageToBytes(BufferedImage bufImage) throws IOException {
