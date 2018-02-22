@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CaptchaProcessorTests {
-    private CaptchaProcessor processor;
+    private RequestsHandler processor;
     private Field  proccessorUserIdData;
     private Method getDateDiffInMinutes;
 
@@ -41,12 +41,12 @@ public class CaptchaProcessorTests {
 
     @Before
     public void setUp() {
-        processor = new CaptchaProcessor();
+        processor = new RequestsHandler();
         try {
-            proccessorUserIdData = CaptchaProcessor.class.getDeclaredField("userId2Data");
+            proccessorUserIdData = RequestsHandler.class.getDeclaredField("userId2Data");
             proccessorUserIdData.setAccessible(true);
 
-            getDateDiffInMinutes = CaptchaProcessor.class.getDeclaredMethod("getDateDiffInMinutes", LocalDateTime.class);
+            getDateDiffInMinutes = RequestsHandler.class.getDeclaredMethod("getDateDiffInMinutes", LocalDateTime.class);
             getDateDiffInMinutes.setAccessible(true);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();

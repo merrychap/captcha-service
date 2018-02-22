@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 
 
-public class CaptchaProcessor implements RequestProcessorInterface {
+public class RequestsHandler {
     private long minutesDelay   = 1;
     private String indexPage    = "index";
     private String errorIdPage  = "errorId";
@@ -23,12 +23,11 @@ public class CaptchaProcessor implements RequestProcessorInterface {
 
     private CaptchaResponseGenerator respGenerator;
 
-    public CaptchaProcessor() {
+    public RequestsHandler() {
         userId2Data   = new HashMap<>();
         respGenerator = new CaptchaResponseGenerator(new String[] {"result", "errorReason"});
     }
 
-    @Override
     public ModelAndView processGetRequest(ModelMap model, HttpServletResponse response) throws IOException {
         CaptchaGenResult captcha = (CaptchaGenResult) RequestImageProcessor.generate(ImageType.CAPTCHA);
         String userId  = TextHandler.generateId();
@@ -41,7 +40,6 @@ public class CaptchaProcessor implements RequestProcessorInterface {
         return respGenerator.generateResponse(indexPage, model, captcha.base64image);
     }
 
-    @Override
     public ModelAndView processPostRequest(ModelMap model, String[] params) {
         String userId     = params[0];
         String captchaAns = params[1];
