@@ -1,5 +1,4 @@
 package com.example.captchaserver;
 
-public enum ImageType {
-    CAPTCHA
+public class ImageFactory {
 }

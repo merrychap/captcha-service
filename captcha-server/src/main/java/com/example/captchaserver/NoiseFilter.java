@@ -2,6 +2,8 @@ package com.example.captchaserver;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.util.Random;
 
 public class NoiseFilter implements ImageFilterInterface {
@@ -11,7 +13,7 @@ public class NoiseFilter implements ImageFilterInterface {
 
     public NoiseFilter() {}
 
-    public void applyFilter(BufferedImage image) {
+    public BufferedImage applyFilter(BufferedImage image) {
         Random rand = new Random();
         for (int row=0; row < image.getWidth(); row++) {
             for (int col=0; col < image.getHeight(); col++) {
@@ -19,6 +21,7 @@ public class NoiseFilter implements ImageFilterInterface {
                 image.setRGB(row, col, newPixel.getRGB());
             }
         }
+        return image;
     }
 
     private Color getNoisedPixel(Random rand, Color pixel) {
@@ -37,5 +40,4 @@ public class NoiseFilter implements ImageFilterInterface {
         else
             return num;
     }
-
 }

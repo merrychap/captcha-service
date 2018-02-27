@@ -6,26 +6,5 @@
     </head>
     <body>
         <img src="data:image/png;base64, {{ captcha }}" />
-        <form action="/" method="post">
-            <div>Id:</div>
-            <input type="text" name="user_id"><br>
-            <div>Answer:</div>
-            <input type="text" name="captcha_ans"><br>
-            <input type="submit" value="Submit">
-        </form>
-        <div hidden id="result">{{ result }}</div>
-        <div hidden id="errorReason">{{ errorReason }}</div>
-        <script>
-            let result = document.getElementById("result").innerHTML;
-            let error = document.getElementById("errorReason").innerHTML;
-            if (result != "") {
-                if (error != "") {
-                    alert(result + "\n" + error);
-                } else {
-                    alert(result);
-                }
-                window.location.href = '/';
-            }
-        </script>
     </body>
 </html>

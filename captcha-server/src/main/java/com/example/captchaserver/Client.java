@@ -1,10 +1,14 @@
 package com.example.captchaserver;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
-public class Client {
+public class Client implements FactoryObject {
+    private String publicKeyAttribute  = "public";
+    private String privateKeyAttribute = "secret";
+
     private UUID publicKey;
     private UUID privateKey;
 
@@ -21,8 +25,10 @@ public class Client {
         return privateKey.toString();
     }
 
-    public String toJSON() {
-        return String.format("{\"secret\": \"%s\", \"public\": \"%s\"}",privateKey, publicKey);
+    public JSONObject toJson() {
+        return new JSONObject()
+                .put(publicKeyAttribute,  publicKey)
+                .put(privateKeyAttribute, privateKey);
     }
 }
 
