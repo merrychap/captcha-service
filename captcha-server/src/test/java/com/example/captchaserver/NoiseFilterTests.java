@@ -25,7 +25,7 @@ public class NoiseFilterTests {
         BufferedImage image = generateBlackPicture();
         filter.applyFilter(image);
 
-        for (int row=0; row < image.getWidth(); row++)
+        for (int row = 0; row < image.getWidth(); row++)
             for (int col = 0; col < image.getHeight(); col++)
                 if (!Color.BLACK.equals(new Color(image.getRGB(row, col))))
                     notEqualsCount++;
@@ -35,7 +35,7 @@ public class NoiseFilterTests {
     @Test
     public void testIfImageIsBlack() {
         BufferedImage image = generateBlackPicture();
-        for (int row=0; row < image.getWidth(); row++)
+        for (int row = 0; row < image.getWidth(); row++)
             for (int col=0; col < image.getHeight(); col++)
                 assertEquals(Color.BLACK, new Color(image.getRGB(row, col)));
     }

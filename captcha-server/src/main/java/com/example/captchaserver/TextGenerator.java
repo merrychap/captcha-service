@@ -2,7 +2,7 @@ package com.example.captchaserver;
 
 import java.util.Random;
 
-public class TextHandler {
+public class TextGenerator {
     private static Random rand     = new Random();
     private static String asciiAlphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static String numAlphabet = "1234567890";

@@ -16,7 +16,7 @@ def main():
     # client['public'] = '123'
     # client['public'] = '1' + client['public'][1:]
     # captcha['request'] = '123'
-    captcha['request'] = '1' + captcha['request'][1:]
+    # captcha['request'] = '1' + captcha['request'][1:]
     # captcha['answer'] = ''
 
     response = json.loads(requests.post('http://localhost:8080/captcha/solve', data={'public': client['public'],
@@ -31,6 +31,9 @@ def main():
     print(response)
     result   = json.loads(requests.get('http://localhost:8080/captcha/verify?secret={}&response={}'.format(client['secret'], response['response'])).text)
     print(result)
+
+    # result   = json.loads(requests.get('http://localhost:8080/captcha/verify?secret={}&response={}'.format(client['secret'], response['response'])).text)
+    # print(result)
 
 
 if __name__ == '__main__':

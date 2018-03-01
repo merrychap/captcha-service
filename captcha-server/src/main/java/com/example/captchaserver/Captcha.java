@@ -1,6 +1,5 @@
 package com.example.captchaserver;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.time.Duration;
@@ -56,7 +55,7 @@ public class Captcha implements FactoryObject {
     }
 
     private void generate() {
-        captchaAnswer = TextHandler.generateText(textLen);
+        captchaAnswer = TextGenerator.generateText(textLen);
         image = generator.generateImage(new TextImageType(captchaAnswer));
         image = ImageFiltersApplier.applyFilters(image, Arrays.asList(new NoiseFilter()));
     }
