@@ -62,7 +62,7 @@ public class CaptchaRequestsHandler {
         keyValidation(privateUserKey, false);
         if (!responseQueue.containsKey(answerToken))
             return new JSONObject().put(errorCodeAttribute, "Invalid response token");
-        return responseQueue.get(answerToken);
+        return responseQueue.remove(answerToken);
     }
 
     private void keyValidation(String userKey, Boolean isPublicKey) throws RequestException {

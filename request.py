@@ -16,7 +16,7 @@ def main():
     # client['public'] = '123'
     # client['public'] = '1' + client['public'][1:]
     # captcha['request'] = '123'
-    # captcha['request'] = '1' + captcha['request'][1:]
+    captcha['request'] = '1' + captcha['request'][1:]
     # captcha['answer'] = ''
 
     response = json.loads(requests.post('http://localhost:8080/captcha/solve', data={'public': client['public'],
