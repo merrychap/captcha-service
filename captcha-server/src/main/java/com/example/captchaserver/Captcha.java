@@ -49,9 +49,10 @@ public class Captcha implements FactoryObject {
     }
 
     public JSONObject toJson() {
-        return new JSONObject()
-                .put(captchaUUIDAttribute, uuid.toString())
-                .put(captchaAnswerAttribute, captchaAnswer);
+        JSONObject object = new JSONObject().put(captchaUUIDAttribute, uuid.toString());
+        if (!CommandLineArguments.getProduction())
+                object.put(captchaAnswerAttribute, captchaAnswer);
+        return object;
     }
 
     private void generate() {

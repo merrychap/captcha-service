@@ -6,7 +6,7 @@ import java.util.UUID;
 
 
 public class CaptchaRequestsHandler {
-    private long minutesDelay = 1;
+    private long answerDelayInSeconds;
 
     private String successAttribute   = "success";
     private String errorCodeAttribute = "errorCode";
@@ -17,10 +17,12 @@ public class CaptchaRequestsHandler {
 
     private HashMap<String, JSONObject> responseQueue;
 
-    public CaptchaRequestsHandler() {
+    public CaptchaRequestsHandler(int answerDelay) {
         user2Captcha   = new HashMap<>();
         captchaFactory = new CaptchaFactory();
         responseQueue  = new HashMap<>();
+
+        answerDelayInSeconds = answerDelay;
     }
 
     public Captcha generate(String publicUserKey) throws RequestException {
@@ -43,7 +45,7 @@ public class CaptchaRequestsHandler {
 
         String uuid = UUID.randomUUID().toString();
 
-        if (captcha.getLiveTime().toMinutes() >= 1) {
+        if (captcha.getLiveTime().getSeconds() >= answerDelayInSeconds) {
             json.put(successAttribute,   "false");
             json.put(errorCodeAttribute, "Time limit for an answer is exceeded");
         } else if (captcha.getCaptchaAnswer().equals(answer)) {

@@ -14,8 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 
 @SpringBootApplication
 public class ServerApplication {
+    private static String usage = "\n\n[-] Usage: java -jar -Dproduction=[true/false] server.jar <ttl>";
 
 	public static void main(String[] args) {
+        if (args.length != 1 || !CommandLineArguments.setTimeForAnswer(args[0]) || !CommandLineArguments.setProduction()) {
+            System.out.println(usage);
+            return;
+        }
 		SpringApplication.run(ServerApplication.class, args);
 	}
 }

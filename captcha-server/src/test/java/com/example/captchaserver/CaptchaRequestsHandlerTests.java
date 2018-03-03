@@ -34,12 +34,14 @@ public class CaptchaRequestsHandlerTests {
     private Client  client;
     private Captcha captcha;
 
+    private int timeDelayInSeconds = 60;
+
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
     @Before
     public void setUp() throws NoSuchMethodException, RequestException {
-        requestsHandler = new CaptchaRequestsHandler();
+        requestsHandler = new CaptchaRequestsHandler(timeDelayInSeconds);
 
         client  = RequestHandlers.clientReqHandler.register();
         captcha = requestsHandler.generate(client.publicKey());
@@ -162,7 +164,7 @@ public class CaptchaRequestsHandlerTests {
 
         Captcha captcha = Mockito.spy(requestsHandler.generate(client.publicKey()));
         ((HashMap<String, Captcha>) ReflectionUtils.getField(user2Captcha, requestsHandler)).put(client.publicKey(), captcha);
-        when(captcha.getLiveTime()).thenReturn(Duration.between(Instant.now(), Instant.now()).plusMinutes(1));
+        when(captcha.getLiveTime()).thenReturn(Duration.between(Instant.now(), Instant.now()).plusSeconds(timeDelayInSeconds));
 
         JSONObject response = requestsHandler.solve(client.publicKey(), captcha.getId(), captcha.getCaptchaAnswer());
         response = requestsHandler.verify(client.privateKey(), response.getString("response"));

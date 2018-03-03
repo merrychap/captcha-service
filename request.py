@@ -18,11 +18,11 @@ def main():
     # captcha['request'] = '123'
     # captcha['request'] = '1' + captcha['request'][1:]
     # captcha['answer'] = ''
+    # time.sleep(9)
 
     response = json.loads(requests.post('http://localhost:8080/captcha/solve', data={'public': client['public'],
                                                                                      'request': captcha['request'],
                                                                                      'answer': captcha['answer']}).text)
-
     # client['secret'] = '123'
     # client['secret'] = '1' + client['public'][1:]
     # response['response'] = '123'
